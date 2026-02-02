@@ -1,0 +1,55 @@
+body {
+    font-family: 'Cairo', sans-serif;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}
+
+.scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+/* Animations */
+@keyframes fade-in {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+    animation: fade-in 0.5s ease-out forwards;
+}
+
+@keyframes slide-up {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+}
+
+.animate-slide-up {
+    animation: slide-up 0.3s ease-out forwards;
+}
+
+@keyframes bounce-sm {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+}
+
+.hover-bounce:hover {
+    animation: bounce-sm 0.5s infinite;
+}
+
+.nav-item.active {
+    color: #ea580c; /* orange-600 */
+}
+
+.nav-item.active span {
+    font-weight: bold;
+}
+
+/* Glass effect utilities */
+.glass {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
