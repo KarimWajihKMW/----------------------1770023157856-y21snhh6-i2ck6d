@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تطبيق أكوادرا لتوصيل الطعام</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans antialiased overflow-x-hidden">
+    
+    <!-- EXISTING WELCOME SCREEN (SPLASH) -->
+    <div id="splash-screen" class="fixed inset-0 z-50 bg-gray-100 flex items-center justify-center transition-opacity duration-700 ease-in-out">
+        <div class="max-w-md w-full text-center p-6">
+            <h1 class="text-3xl font-bold text-slate-800 mb-4 tracking-tight">مرحباً بك في أكوادرا</h1>
+            <p class="text-gray-600 mb-8">
+                المنشئ الخارق الذي يساعدك على بناء تطبيقات جميلة باستخدام Tailwind CSS.
+            </p>
+            
+            <div id="launch-app-btn" class="bg-white p-8 rounded-xl shadow-lg border border-gray-100 hover:scale-105 transition-all duration-300 cursor-pointer card group">
+                <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mx-auto mb-4 group-hover:bg-orange-200 transition-colors">
+                     <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg>
+                </div>
+                <h2 class="text-xl font-semibold text-gray-900 mb-2">اطلب طعامك الآن</h2>
+                <p class="text-gray-500 text-sm">اضغط للدخول إلى عالم النكهات والتوصيل السريع.</p>
+            </div>
+            
+            <div class="mt-8 text-sm text-gray-400">
+                مدعوم بواسطة Gemini 3 Pro
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN APP CONTAINER (Hidden Initially) -->
+    <div id="app-container" class="hidden min-h-screen pb-20 relative opacity-0 transition-opacity duration-700">
+        
+        <!-- HEADER -->
+        <header class="sticky top-0 z-40 bg-white/80 backdrop-blur-md shadow-sm px-4 py-3">
+            <div class="flex justify-between items-center">
+                <div class="flex flex-col">
+                    <span class="text-xs text-gray-500">التوصيل إلى</span>
+                    <div class="flex items-center gap-1 font-bold text-orange-600 cursor-pointer">
+                        <span>المنزل، شارع الملك</span>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </div>
+                </div>
+                <div class="relative p-2 bg-gray-100 rounded-full hover:bg-gray-200 transition-colors cursor-pointer" onclick="toggleCart()">
+                    <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+                    <span id="cart-count" class="absolute top-0 right-0 bg-red-500 text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full transform scale-0 transition-transform duration-300">0</span>
+                </div>
+            </div>
+            <!-- Search Bar -->
+            <div class="mt-3 relative">
+                <input type="text" placeholder="ابحث عن مطعم أو وجبة..." class="w-full bg-gray-100 text-sm py-3 px-10 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-300 transition-shadow">
+                <svg class="w-5 h-5 text-gray-400 absolute right-3 top-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            </div>
+        </header>
+
+        <!-- VIEWS -->
+        <main id="main-content" class="p-4 space-y-6">
+            
+            <!-- HOME VIEW -->
+            <div id="home-view" class="view-section">
+                <!-- Promo Banner -->
+                <div class="relative w-full h-40 bg-gradient-to-r from-orange-500 to-red-600 rounded-2xl shadow-lg overflow-hidden flex items-center px-6 mb-6">
+                    <div class="text-white z-10">
+                        <h3 class="text-2xl font-bold mb-1">عرض خاص!</h3>
+                        <p class="text-sm opacity-90 mb-3">خصم 50% على أول طلب لك</p>
+                        <button class="bg-white text-orange-600 px-4 py-1.5 rounded-full text-sm font-bold shadow-md hover:bg-gray-50 transition-colors">اطلب الآن</button>
+                    </div>
+                    <div class="absolute -left-4 -bottom-8 w-40 h-40 bg-white/20 rounded-full blur-2xl"></div>
+                    <div class="absolute right-0 top-0 w-full h-full opacity-10 bg-[url('https://www.transparenttextures.com/patterns/food.png')]"></div>
+                </div>
+
+                <!-- Categories -->
+                <div>
+                    <div class="flex justify-between items-center mb-3">
+                        <h2 class="text-lg font-bold text-gray-800">التصنيفات</h2>
+                        <button class="text-orange-500 text-sm">مشاهدة الكل</button>
+                    </div>
+                    <div class="flex gap-4 overflow-x-auto pb-4 scrollbar-hide" id="categories-list">
+                        <!-- Categories injected by JS -->
+                    </div>
+                </div>
+
+                <!-- Popular Restaurants -->
+                <div>
+                    <h2 class="text-lg font-bold text-gray-800 mb-3">مطاعم مميزة</h2>
+                    <div class="grid grid-cols-1 gap-4" id="restaurants-list">
+                        <!-- Restaurants injected by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- MENU VIEW (Hidden) -->
+            <div id="menu-view" class="view-section hidden">
+                <button onclick="showHome()" class="mb-4 flex items-center text-gray-500 hover:text-orange-600 transition-colors">
+                    <svg class="w-5 h-5 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                    العودة للمطاعم
+                </button>
+                
+                <div id="menu-header" class="mb-6">
+                    <!-- Restaurant Info injected by JS -->
+                </div>
+
+                <div class="space-y-4" id="menu-items">
+                    <!-- Menu items injected by JS -->
+                </div>
+            </div>
+
+            <!-- TRACKING VIEW (Hidden) -->
+            <div id="tracking-view" class="view-section hidden">
+                <div class="text-center mb-8">
+                    <h2 class="text-2xl font-bold text-gray-800">تتبع طلبك</h2>
+                    <p class="text-gray-500">رقم الطلب #ORD-2023-88</p>
+                </div>
+
+                <!-- Map Placeholder -->
+                <div class="w-full h-48 bg-gray-200 rounded-2xl mb-8 relative overflow-hidden shadow-inner flex items-center justify-center">
+                    <div class="absolute inset-0 bg-blue-50 opacity-50"></div>
+                    <div class="text-gray-400 font-bold flex flex-col items-center">
+                        <svg class="w-10 h-10 mb-2 animate-bounce text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                        خريطة التوصيل المباشر
+                    </div>
+                </div>
+
+                <!-- Status Steps -->
+                <div class="space-y-8 relative px-4">
+                    <div class="absolute right-6 top-2 bottom-2 w-0.5 bg-gray-200"></div>
+                    
+                    <div class="relative flex items-center">
+                        <div class="w-5 h-5 rounded-full bg-green-500 z-10 border-4 border-white shadow-sm"></div>
+                        <div class="mr-6">
+                            <h4 class="font-bold text-gray-800">تم استلام الطلب</h4>
+                            <p class="text-xs text-gray-500">10:30 صباحاً</p>
+                        </div>
+                    </div>
+                    
+                    <div class="relative flex items-center">
+                        <div class="w-5 h-5 rounded-full bg-orange-500 z-10 border-4 border-white shadow-sm animate-pulse"></div>
+                        <div class="mr-6">
+                            <h4 class="font-bold text-gray-800">جاري التحضير</h4>
+                            <p class="text-xs text-gray-500">المطبخ يعمل على وجبتك</p>
+                        </div>
+                    </div>
+
+                    <div class="relative flex items-center opacity-50">
+                        <div class="w-5 h-5 rounded-full bg-gray-300 z-10 border-4 border-white shadow-sm"></div>
+                        <div class="mr-6">
+                            <h4 class="font-bold text-gray-800">في الطريق</h4>
+                            <p class="text-xs text-gray-500">المندوب استلم الطلب</p>
+                        </div>
+                    </div>
+
+                    <div class="relative flex items-center opacity-50">
+                        <div class="w-5 h-5 rounded-full bg-gray-300 z-10 border-4 border-white shadow-sm"></div>
+                        <div class="mr-6">
+                            <h4 class="font-bold text-gray-800">تم التوصيل</h4>
+                            <p class="text-xs text-gray-500">بالهناء والشفاء</p>
+                        </div>
+                    </div>
+                </div>
+
+                <button onclick="showHome()" class="mt-10 w-full bg-gray-100 text-gray-800 py-3 rounded-xl font-bold hover:bg-gray-200 transition-colors">
+                    العودة للرئيسية
+                </button>
+            </div>
+
+        </main>
+
+        <!-- CART DRAWER / MODAL -->
+        <div id="cart-modal" class="fixed inset-0 z-50 hidden">
+            <div class="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity" onclick="toggleCart()"></div>
+            <div class="absolute bottom-0 w-full bg-white rounded-t-3xl shadow-2xl p-6 transition-transform transform translate-y-full duration-300 ease-out" id="cart-content">
+                <div class="w-12 h-1 bg-gray-300 rounded-full mx-auto mb-6"></div>
+                
+                <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+                    <svg class="w-6 h-6 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+                    سلة المشتريات
+                </h2>
+
+                <div id="cart-items-container" class="max-h-60 overflow-y-auto space-y-4 mb-6">
+                    <!-- Cart Items injected here -->
+                    <p class="text-center text-gray-500 py-4">السلة فارغة، أضف بعض الطعام اللذيذ!</p>
+                </div>
+
+                <div class="border-t pt-4 mb-6">
+                    <div class="flex justify-between text-lg font-bold mb-4">
+                        <span>الإجمالي</span>
+                        <span id="cart-total">0.00 ر.س</span>
+                    </div>
+                    <button onclick="placeOrder()" id="checkout-btn" class="w-full bg-gradient-to-r from-orange-500 to-red-600 text-white py-4 rounded-xl font-bold shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                        إتمام الطلب
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- BOTTOM NAV -->
+        <nav class="fixed bottom-0 w-full bg-white shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] border-t border-gray-100 py-2 px-6 flex justify-between items-center z-40">
+            <button onclick="showHome()" class="nav-item flex flex-col items-center gap-1 text-orange-600">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                <span class="text-[10px] font-bold">الرئيسية</span>
+            </button>
+            <button class="nav-item flex flex-col items-center gap-1 text-gray-400 hover:text-orange-500 transition-colors">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                <span class="text-[10px] font-medium">المفضلة</span>
+            </button>
+            <button onclick="toggleCart()" class="nav-item -mt-8 bg-orange-500 text-white p-4 rounded-full shadow-lg hover:shadow-orange-300/50 hover:scale-110 transition-all">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+            </button>
+            <button class="nav-item flex flex-col items-center gap-1 text-gray-400 hover:text-orange-500 transition-colors">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
+                <span class="text-[10px] font-medium">طلباتي</span>
+            </button>
+            <button class="nav-item flex flex-col items-center gap-1 text-gray-400 hover:text-orange-500 transition-colors">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                <span class="text-[10px] font-medium">حسابي</span>
+            </button>
+        </nav>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
